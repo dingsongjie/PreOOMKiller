@@ -8,9 +8,8 @@ When the container oom occurs in kubernetes, the system kernel uses SIGKILL to k
 
 ## custom options
 
-```cs
-        // ms
-public int CkeckInterval = 500;
+```cs      
+public int CkeckInterval = 500; // ms
 public string MaxMemoryFilePath = "/sys/fs/cgroup/memory/memory.stat";
 public string UsedMemoryFilePath = "/sys/fs/cgroup/memory/memory.usage_in_bytes";
 public decimal Percent = 95;
