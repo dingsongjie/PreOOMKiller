@@ -11,7 +11,7 @@ When the container oom occurs in kubernetes, the system kernel uses SIGKILL to k
 dotnet add package PreOOMKiller
 ```
 
-* Use Service
+* Add Service
 
 ```cs
 services.AddPreOOMKiller();
