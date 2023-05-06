@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading;
@@ -60,8 +61,10 @@ namespace PreOOMKiller
                 // 比较 hierarchical_memory_limit 和 memory.usage_in_bytes 的大小
                 if (memoryUsageInBytes > _maxMemoryInBytes * options.Percent / 100)
                 {
-                    _logger.LogWarning($"Memory usage exceeds estimated limit : {options.Percent}");
-                    Environment.Exit(1);
+                    var message = $"Memory usage exceeds estimated limit : {options.Percent}";
+                    _logger.LogWarning(message);
+                    var process = Process.GetCurrentProcess();
+                    process.Kill();
                 }
             }
             return Task.CompletedTask;
