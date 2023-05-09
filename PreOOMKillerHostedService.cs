@@ -63,7 +63,8 @@ namespace PreOOMKiller
                 {
                     var message = $"Memory usage exceeds estimated limit : {options.Percent}";
                     _logger.LogWarning(message);
-                    Environment.Exit(0);
+                    throw new Exception(message);
+                    //Environment.Exit(0);
                 }
             }
             return Task.CompletedTask;
