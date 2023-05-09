@@ -18,7 +18,7 @@ namespace PreOOMKiller
         private long _maxMemoryInBytes;
 
 
-        public PreOOMKillerHostedService(ILogger<PreOOMKillerHostedService> logger, IOptions<PreOOMKillerOptions> options,IHostApplicationLifetime app)
+        public PreOOMKillerHostedService(ILogger<PreOOMKillerHostedService> logger, IOptions<PreOOMKillerOptions> options, IHostApplicationLifetime app)
         {
             _options = options;
             _logger = logger;
@@ -65,16 +65,7 @@ namespace PreOOMKiller
                 {
                     var message = $"Memory usage exceeds estimated limit : {options.Percent}";
                     _logger.LogWarning(message);
-                    string command = "createdump  1 --full -f /dumpfile/coredump.1";
-                    ProcessStartInfo psi = new ProcessStartInfo("bash", "-c \"" + command + "\"")
-                    {
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false
-                    };
-                    Process process = new Process { StartInfo = psi };
-                    process.Start();
-                    process.WaitForExit();
+                    _applicationLifetime.StopApplication();
                 }
             }
             return Task.CompletedTask;
