@@ -14,13 +14,15 @@ namespace PreOOMKiller
     {
         private readonly ILogger<PreOOMKillerHostedService> _logger;
         private readonly IOptions<PreOOMKillerOptions> _options;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         private long _maxMemoryInBytes;
 
 
-        public PreOOMKillerHostedService(ILogger<PreOOMKillerHostedService> logger, IOptions<PreOOMKillerOptions> options)
+        public PreOOMKillerHostedService(ILogger<PreOOMKillerHostedService> logger, IOptions<PreOOMKillerOptions> options,IHostApplicationLifetime app)
         {
             _options = options;
             _logger = logger;
+            _applicationLifetime = app;
         }
         public Task Init(PreOOMKillerOptions options, CancellationToken cancellationToken)
         {
@@ -63,7 +65,8 @@ namespace PreOOMKiller
                 {
                     var message = $"Memory usage exceeds estimated limit : {options.Percent}";
                     _logger.LogWarning(message);
-                    Process.GetCurrentProcess().Kill();
+                    Environment.ExitCode = 0;
+                    _applicationLifetime.StopApplication();
                 }
             }
             return Task.CompletedTask;
