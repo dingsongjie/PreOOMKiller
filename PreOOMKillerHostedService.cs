@@ -65,8 +65,16 @@ namespace PreOOMKiller
                 {
                     var message = $"Memory usage exceeds estimated limit : {options.Percent}";
                     _logger.LogWarning(message);
-                    Environment.ExitCode = 0;
-                    _applicationLifetime.StopApplication();
+                    string command = "createdump  1 --full -f /dumpfile/coredump.1";
+                    ProcessStartInfo psi = new ProcessStartInfo("bash", "-c \"" + command + "\"")
+                    {
+                        RedirectStandardOutput = true,
+                        RedirectStandardError = true,
+                        UseShellExecute = false
+                    };
+                    Process process = new Process { StartInfo = psi };
+                    process.Start();
+                    process.WaitForExit();
                 }
             }
             return Task.CompletedTask;
